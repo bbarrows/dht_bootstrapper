@@ -18,13 +18,15 @@ HOW_LONG_TO_WAIT_FOR_DHT_PEERS = 10
 ANNOUNCE = 1
 STARTED = 2
 
-
+#This just returns a random number between 0 and MAX 32 Bit Int
 def gen_unsigned_32bit_id():
     return random.randint(0, 0xFFFFFFFF)
     
+#This just returns a random unsigned int
 def gen_signed_32bit_id():
     return random.randint(-2147483648, 2147483647)    
     
+#Generates a string of 20 random bytes
 def gen_peer_id():
     return ''.join(chr(random.randint(0,255)) for x in range(20))
     
@@ -142,7 +144,6 @@ def get_peers_dht_port(torrent_peers, info_hash, peer_id, callback):
                 con.close()
             
             callback(dht_list)
-        
     
     for (cur_ip, cur_port) in torrent_peers:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
@@ -157,6 +158,7 @@ def get_peers_dht_port(torrent_peers, info_hash, peer_id, callback):
     
 def get_dht_peers_from_torrent(torrent_file, callback):
     tracker, port, info_hash = get_tracker_and_infohash_from_torrent(torrent_file)
+    #print "Info hash:%s" % info_hash
     peer_id = gen_peer_id()
     torrent_peers = get_peer_list_from_tracker(tracker, port, peer_id, info_hash)
     get_peers_dht_port(torrent_peers, info_hash, peer_id, callback)
@@ -169,4 +171,3 @@ def got_dht_peer(dht_list):
 if __name__ == "__main__":
     get_dht_peers_from_torrent(sys.argv[1], got_dht_peer)
 
-    
